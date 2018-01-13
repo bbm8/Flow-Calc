@@ -23,18 +23,31 @@ class ViewController: UIViewController {
     @IBOutlet weak var addButton: UIButton!
     @IBOutlet weak var calcButton: UIButton!
     
+    @IBOutlet weak var clearButton: UIButton!
+    
     var pipeID : CGFloat = 0
     var width : CGFloat = 0
     
     var pipes = [AnyObject]()
     var iconViews = [UIView]()
-    var labels = [UILabel]()
+    var labels = [UIButton]()
     var buttons = [UIButton]()
     
     var sizeIndex : Int = 0
     var scheduleIndex : Int = 0
     var sizeText = "select size"
     var scheduleText = "select schedule"
+    
+    var flow = true
+    var inlet = false
+    var outlet = false
+    var chosenGas = "select gas"
+    var answerText = "Flow Rate"
+    var gasIndex = 0
+    var tempText = ""
+    var fieldOneText = ""
+    var fieldTwoText = ""
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +62,11 @@ class ViewController: UIViewController {
         
         self.calcButton.clipsToBounds = true
        
+        clearButton.layer.cornerRadius = 10
+        
+        clearButton.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.5)
+        clearButton.titleLabel?.textColor = UIColor(red: (clearButton.titleLabel?.textColor.cgColor.components?[0])!, green: (clearButton.titleLabel?.textColor.cgColor.components?[1])!, blue: (clearButton.titleLabel?.textColor.cgColor.components?[2])!, alpha: 0.5)
+
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destination : addPipeViewController = segue.destination as? addPipeViewController
@@ -69,8 +87,18 @@ class ViewController: UIViewController {
         }
         if let destination : calcViewController = segue.destination as? calcViewController
         {
+            destination.mainCont = self
             destination.length = equivalentLength
             destination.ID = pipeID
+            destination.flow = flow
+            destination.inlet = inlet
+            destination.outlet = outlet
+            destination.chosenGas = chosenGas
+            destination.gasIndex = gasIndex
+            destination.tempText = tempText
+            destination.fieldOneText = fieldOneText
+            destination.fieldTwoText = fieldTwoText
+            destination.answerText = answerText
         }
     }
   
@@ -123,6 +151,8 @@ class ViewController: UIViewController {
         {
             generatePipes()
         }
+        self.pipeView.addSubview(clearButton)
+
 
     }
     func generatePipes()
@@ -333,7 +363,32 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-   
+    @IBAction func clearAll(_ sender: Any){
+        pipeID = 0
+        width = 0
+        equivalentLength = 0
+        pipes = [AnyObject]()
+        iconViews = [UIView]()
+        labels = [UIButton]()
+        buttons = [UIButton]()
+        sizeIndex = 0
+        scheduleIndex = 0
+        sizeText = "select size"
+        scheduleText = "select schedule"
+        pipeView.layer.sublayers = nil
+        flow = true
+        inlet = false
+        outlet = false
+        chosenGas = "select gas"
+        answerText = "Flow Rate"
+        gasIndex = 0
+        tempText = ""
+        fieldOneText = ""
+        fieldTwoText = ""
+        self.pipeView.addSubview(clearButton)
+    }
+    
+    
 
 }
 

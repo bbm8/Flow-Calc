@@ -82,33 +82,58 @@ class ellOrientationViewController: UIViewController {
         x.backgroundColor = UIColor.white
         x.layer.cornerRadius = 10
 
-        let y = UILabel()
+        let y = UIButton()
         y.frame = CGRect(x: 10+w, y: 5+(w+5)*mainCont.pipes.count, width: Int(mainCont.pipeScrollView.frame.width)-2*w-20, height: w)
+        y.layer.cornerRadius = 10
         y.backgroundColor = UIColor.init(red: 69/255.0, green: 174/255.0, blue: 245/255.0, alpha: 1)
-        y.textColor = UIColor.white
-        y.textAlignment = .center
-        y.text =  "orientation: "
+        y.setTitleColor(.white, for: .normal)
+        y.titleLabel?.textAlignment = .center
+        var infoText =  "orientation: "
         if clockwise
         {
-            y.text = y.text! + "clockwise"
+            infoText = infoText + "clockwise"
         }
         else
         {
-            y.text = y.text! + "counterclockwise"
+            infoText = infoText + "counterclockwise"
         }
-        y.adjustsFontSizeToFitWidth = true
+        y.setTitle(infoText,for: .normal)
+        y.titleLabel?.adjustsFontSizeToFitWidth = true
         
         if tText == "45° ell"
         {
-            _ = drawArc(xE: x.frame.height/3, yE: x.frame.height/6*5, wid: x.frame.height/3, ang: CGFloat(M_PI/2), ratio: 1, angleChange: -1*CGFloat(M_PI/4), view: x)
+            if clockwise
+            {
+                _ = drawArc(xE: x.frame.height/3, yE: x.frame.height/6*5, wid: x.frame.height/3, ang: CGFloat(M_PI/2), ratio: 1, angleChange: -1*CGFloat(M_PI/4), view: x)
+            }
+            else
+            {
+                 _ = drawArc(xE: x.frame.height/3*2, yE: x.frame.height/6*5, wid: x.frame.height/3, ang: CGFloat(M_PI/2), ratio: 1, angleChange: CGFloat(M_PI/4), view: x)
+            }
         }
         if tText == "Short rad. ell"
         {
-            _ = drawArc(xE: x.frame.height/2-x.frame.height/12, yE: x.frame.height/2+x.frame.height/4, wid: x.frame.height/3, ang: CGFloat(M_PI/2), ratio: 0.5, angleChange: -1*CGFloat(M_PI/2), view: x)
+            if clockwise
+            {
+                _ = drawArc(xE: x.frame.height/2-x.frame.height/12, yE: x.frame.height/2+x.frame.height/4, wid: x.frame.height/3, ang: CGFloat(M_PI/2), ratio: 0.5, angleChange: -1*CGFloat(M_PI/2), view: x)
+            }
+            else
+            {
+                _ = drawArc(xE: x.frame.height/2+x.frame.height/12, yE: x.frame.height/2+x.frame.height/4, wid: x.frame.height/3, ang: CGFloat(M_PI/2), ratio: 0.5, angleChange: CGFloat(M_PI/2), view: x)
+            }
+            
         }
         if tText == "Long rad. ell"
         {
-            _ = drawArc(xE: x.frame.height/3, yE: x.frame.height/6*5, wid: x.frame.height/3, ang: CGFloat(M_PI/2), ratio: 1, angleChange: -1*CGFloat(M_PI/2), view: x)
+            if clockwise
+            {
+                _ = drawArc(xE: x.frame.height/3, yE: x.frame.height/6*5, wid: x.frame.height/3, ang: CGFloat(M_PI/2), ratio: 1, angleChange: -1*CGFloat(M_PI/2), view: x)
+            }
+            else
+            {
+                _ = drawArc(xE: x.frame.height/3*2, yE: x.frame.height/6*5, wid: x.frame.height/3, ang: CGFloat(M_PI/2), ratio: 1, angleChange: CGFloat(M_PI/2), view: x)
+            }
+            
         }
         
         let z = UIButton()

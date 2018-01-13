@@ -122,19 +122,21 @@ class pipeLenViewController: UIViewController {
                 x.backgroundColor = UIColor.white
                 _ = drawPipe(xE: 10, yE: x.frame.height/2, wid: x.frame.height/4, len: x.frame.width-20, ang: 0, v: x)
 
-                let y = UILabel()
+                let y = UIButton()
                 y.frame = CGRect(x: 10+w, y: 5+(w+5)*mainCont.pipes.count, width: Int(mainCont.pipeScrollView.frame.width)-2*w-20, height: w)
+                y.layer.cornerRadius = 10
                 y.backgroundColor = UIColor.init(red: 69/255.0, green: 174/255.0, blue: 245/255.0, alpha: 1)
-                y.textColor = UIColor.white
-                y.adjustsFontSizeToFitWidth = true
-                y.textAlignment = .center
-                y.text =  "length: " + String(len)
+                y.setTitleColor(.white, for: .normal)
+                y.titleLabel?.adjustsFontSizeToFitWidth = true
+                y.titleLabel?.textAlignment = .center
+                y.setTitle("length: " + String(len),for: .normal)
+
                 
                 let z = UIButton()
                 z.backgroundColor = UIColor.white
                 z.frame = CGRect(x: Int(mainCont.pipeScrollView.frame.width)-w, y: 10+(w+5)*mainCont.pipes.count, width: w-10, height: w-10)
                 z.layer.cornerRadius = z.frame.width/2
-                
+
                 let shape1 = UIBezierPath()
                 shape1.move(to: CGPoint(x: z.frame.width/4,y: z.frame.width/4))
                 shape1.addLine(to: CGPoint(x: z.frame.width*3/4,y: z.frame.height*3/4))

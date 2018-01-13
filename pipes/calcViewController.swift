@@ -51,9 +51,15 @@ class calcViewController: UIViewController {
     var gasIndex = 0
     @IBOutlet weak var gasButton: UIButton!
     
-    var flow = true
+    var flow = false
     var inlet = false
     var outlet = false
+    var answerText : String = String()
+    var chosenGas : String = String()
+    var tempText : String = String()
+    var fieldOneText : String = String()
+    var fieldTwoText : String = String()
+    var mainCont = ViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,6 +84,52 @@ class calcViewController: UIViewController {
         outletChoice.titleLabel?.adjustsFontSizeToFitWidth = true
         IDlabel.adjustsFontSizeToFitWidth = true
         lengthLabel.adjustsFontSizeToFitWidth = true
+        fieldOneUnitsLabel.adjustsFontSizeToFitWidth = true
+        fieldTwoUnitsLabel.adjustsFontSizeToFitWidth = true
+        answerLabel.adjustsFontSizeToFitWidth = true
+        
+        gasButton.setTitle(chosenGas, for: .normal)
+        temperatureField.text = tempText
+        fieldOne.text = fieldOneText
+        fieldTwo.text = fieldTwoText
+
+
+        if flow
+        {
+            flowView.backgroundColor = UIColor.green
+            inletView.backgroundColor = UIColor.clear
+            outletView.backgroundColor = UIColor.clear
+            
+            fieldOneNameLabel.text = "Pressure In:"
+            fieldOneUnitsLabel.text = "psia"
+            fieldTwoNameLabel.text = "Pressure Out:"
+            fieldTwoUnitsLabel.text = "psia"
+        }
+        if inlet
+        {
+            flowView.backgroundColor = UIColor.clear
+            inletView.backgroundColor = UIColor.green
+            outletView.backgroundColor = UIColor.clear
+            
+            fieldOneNameLabel.text = "Pressure Out:"
+            fieldOneUnitsLabel.text = "psia"
+            fieldTwoNameLabel.text = "Flow Rate:"
+            fieldTwoUnitsLabel.text = "MMSCFD"
+        }
+        if outlet
+        {
+            flowView.backgroundColor = UIColor.clear
+            inletView.backgroundColor = UIColor.clear
+            outletView.backgroundColor = UIColor.green
+            
+            fieldOneNameLabel.text = "Pressure In:"
+            fieldOneUnitsLabel.text = "psia"
+            fieldTwoNameLabel.text = "Flow Rate:"
+            fieldTwoUnitsLabel.text = "MMSCFD"
+            answerLabel.text = "Pressure Out"
+        }
+        
+        answerLabel.text = answerText
 
         lengthLabel.text = "Length: " + String(describing: length) + " ft."
         IDlabel.text = "ID: " + String(describing: ID) + " in."
@@ -97,9 +149,9 @@ class calcViewController: UIViewController {
         inletView.backgroundColor = UIColor.clear
         outletView.backgroundColor = UIColor.clear
         
-        fieldOneNameLabel.text = "Inlet Pressure:"
+        fieldOneNameLabel.text = "Pressure In:"
         fieldOneUnitsLabel.text = "psia"
-        fieldTwoNameLabel.text = "Outlet Pressure:"
+        fieldTwoNameLabel.text = "Pressure Out:"
         fieldTwoUnitsLabel.text = "psia"
         answerLabel.text = "Flow Rate"
         fieldOne.text = ""
@@ -114,11 +166,11 @@ class calcViewController: UIViewController {
         inletView.backgroundColor = UIColor.green
         outletView.backgroundColor = UIColor.clear
         
-        fieldOneNameLabel.text = "Outlet Pressure:"
+        fieldOneNameLabel.text = "Pressure Out:"
         fieldOneUnitsLabel.text = "psia"
         fieldTwoNameLabel.text = "Flow Rate:"
         fieldTwoUnitsLabel.text = "MMSCFD"
-        answerLabel.text = "Inlet Pressure"
+        answerLabel.text = "Pressure In"
         fieldOne.text = ""
         fieldTwo.text = ""
 
@@ -131,11 +183,11 @@ class calcViewController: UIViewController {
         inletView.backgroundColor = UIColor.clear
         outletView.backgroundColor = UIColor.green
         
-        fieldOneNameLabel.text = "Inlet Pressure:"
+        fieldOneNameLabel.text = "Pressure In:"
         fieldOneUnitsLabel.text = "psia"
         fieldTwoNameLabel.text = "Flow Rate:"
         fieldTwoUnitsLabel.text = "MMSCFD"
-        answerLabel.text = "Outlet Pressure"
+        answerLabel.text = "Pressure Out"
         fieldOne.text = ""
         fieldTwo.text = ""
 
@@ -194,6 +246,15 @@ class calcViewController: UIViewController {
         temperatureField.resignFirstResponder()
         fieldOne.resignFirstResponder()
         fieldTwo.resignFirstResponder()
+        mainCont.flow = flow
+        mainCont.inlet = inlet
+        mainCont.outlet = outlet
+        mainCont.chosenGas = (gasButton.titleLabel?.text)!
+        mainCont.gasIndex = gasIndex
+        mainCont.tempText = temperatureField.text!
+        mainCont.fieldOneText = fieldOne.text!
+        mainCont.fieldTwoText = fieldTwo.text!
+        mainCont.answerText = answerLabel.text!
         self.dismiss(animated: true, completion: {});
     }
     
@@ -272,32 +333,27 @@ class calcViewController: UIViewController {
             let l : Double = Double(length)
             let t : Double = Double(temperatureField.text!)! + 459.67
             let s : Double = data.specificGravities[gasIndex]
+            let z : Double = 1
             if flow
             {
                 let p1 : Double = Double(fieldOne.text!)!
                 let p2 : Double = Double(fieldTwo.text!)!
-                let f = pow((1+(p1+p2)/2*3.444*100000*pow(10,1.785*5)/(pow(t,3.825))),0.5)
-                let z = pow(f,-2)
                 let q = 1.1*pow(d,2.67)*pow((pow(p1,2)-pow(p2,2))/(l*s*z*t),0.5)
-                answerLabel.text = "Flow Rate: " + String(round(10.0*q)/10.0) + " MMSCFD"
+                answerLabel.text = "Flow Rate: " + String(round(1000.0*q)/1000.0) + " MMSCFD"
             }
             if inlet
             {
                 let p2 : Double = Double(fieldOne.text!)!
                 let q : Double = Double(fieldTwo.text!)!
-                let f = pow((1+(p2)/2*3.444*100000*pow(10,1.785*5)/(pow(t,3.825))),0.5)
-                let z = pow(f,-2)
                 let p1 = pow(pow(q/1.1/pow(d,2.67),2)*l*t*s*z+pow(p2,2),0.5)
-                answerLabel.text = "Inlet Pressure: " + String(round(10.0*p1)/10.0) + " psia"
+                answerLabel.text = "Pressure In: " + String(round(1000.0*p1)/1000.0) + " psia"
             }
             if outlet
             {
                 let p1 : Double = Double(fieldOne.text!)!
                 let q : Double = Double(fieldTwo.text!)!
-                let f = pow((1+(p1)/2*3.444*100000*pow(10,1.785*5)/(pow(t,3.825))),0.5)
-                let z = pow(f,-2)
                 let p2 = pow(pow(p1,2)-pow(q/1.1/pow(d,2.67),2)*l*s*t*z,0.5)
-                answerLabel.text = "Outlet Pressure: " + String(round(10.0*p2)/10.0) + " psia"
+                answerLabel.text = "Pressure Out: " + String(round(1000.0*p2)/1000.0) + " psia"
             }
         }
         
@@ -308,12 +364,8 @@ class calcViewController: UIViewController {
     
     func numIsValid(str : String) -> Bool
     {
-        if let num : Double = Double(str)
+        if let _ : Double = Double(str)
         {
-            if num == 0
-            {
-                return false
-            }
             return true
         }
         return false

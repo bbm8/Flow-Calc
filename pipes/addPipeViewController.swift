@@ -18,11 +18,11 @@ class addPipeViewController: UIViewController {
     var pipes = [AnyObject]()
     
     var iconViews = [UIView]()
-    var labels = [UILabel]()
+    var labels = [UIButton]()
     var buttons = [UIButton]()
     
     var iconViewsToFix = [UIView]()
-    var labelsToFix = [UILabel]()
+    var labelsToFix = [UIButton]()
     var buttonsToFix = [UIButton]()
     
     var sizeText = "select size"
@@ -96,9 +96,7 @@ class addPipeViewController: UIViewController {
         
         }
         
-        pipeScrollView.contentSize = CGSize(width: pipeScrollView.frame.width, height: CGFloat(5+(w+5)*(pipes.count)))
-        
-        
+
         errorX = homeController.appNameLabel.frame.origin.x+16+homeController.appNameLabel.frame.height
         xWidth = homeController.appNameLabel.frame.width-16-homeController.appNameLabel.frame.height
         
@@ -106,7 +104,10 @@ class addPipeViewController: UIViewController {
       
      
     }
-    
+    override func viewDidLayoutSubviews() {
+        pipeScrollView.contentSize = CGSize(width: pipeScrollView.frame.width, height: CGFloat(5+(w+5)*(pipes.count)))
+
+    }
     func setupButton()
     {
         self.exitButton.alpha = 0.0
@@ -207,8 +208,8 @@ class addPipeViewController: UIViewController {
             self.buttonsToFix[i].tag = self.buttonsToFix[i].tag+1
             
         }
-        
-        self.dismiss(animated: true, completion: {self.homeController.appNameLabel.text = "Flow Calc"});
+        self.homeController.appNameLabel.text = "Flow Calc"
+        self.dismiss(animated: true, completion: {});
 
     }
     
